@@ -37,8 +37,16 @@ class InfoController extends Controller
      */
     public function store(InfoRequest $request)
     {
+
         // dd(($request->validated()));
-        if(Info::create($request->validated()))
+        $profile_img = ($request->validated()['profile_img_file']->store('image'));
+        $license_img = ($request->validated()['license_file']->store('license'));
+
+        
+        $data = array_merge($request->validated() , ['profile_img'=> explode('/',$profile_img)[1],'license'=>explode('/',$license_img)[1]]);
+
+
+        if(Info::create($data))
             return ['msg' => 'Record Created Successfully'];
         else
             return ['msg' => 'Something goes wrong'];
